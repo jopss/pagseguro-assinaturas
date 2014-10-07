@@ -1,19 +1,31 @@
 package br.com.jopss.pagseguro.assinaturas.util;
 
 import br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException;
+import br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Classe Singleton para guardar os dados de autenticação e Token.
+ * Classe Singleton para guardar os dados de configurações, como email, token, charset, proxy, etc.
  * Utilizado internamente pela API.
+ * 
  * @author João Paulo Sossoloti.
  */
 public final class APIConfigSingleton {
 
+	private boolean teste = false;
 	private String email;
 	private String token;
-	private boolean teste = false;
+	private String charset = "UTF-8";
+	private String urlPreAprovacao = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/request";
+	private String urlPagamento = "https://pagseguro.uol.com.br/v2/pre-approvals/request.html";
+	private String urlNotificacaoTransacao = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications";
+	private String urlNotificacaoAssinatura = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/notifications";
 
+	private Integer proxyPorta;
+	private String proxyURI;
+	private String proxyUsuario;
+	private String proxySenha;
+	
 	/**
 	 * Instância Singleton.
 	 */
@@ -27,67 +39,300 @@ public final class APIConfigSingleton {
 	
 	/**
 	 * Método central para retorno desta entidade.
-	 * @return Autenticacao.
+	 * @return APIConfigSingleton.
 	 */
 	public static APIConfigSingleton get() {
 		return APIConfigSingleton.autenticacao;
 	}
 
 	/**
-	 * Limpa os dados armazenados na memória desta entidade.
+	 * Limpa os dados armazenados na memória.
 	 */
 	public void limpar() {
 		this.email = null;
 		this.token = null;
 		teste = false;
 	}
+	
+	public boolean proxyConfigurado(){
+		if(proxyPorta!=null && StringUtils.isNotBlank(proxyURI)){
+			return true;
+		}
+		return false;
+	}
 
 	/**
-	 * Retorna o ID_CLIENT para acessar a geração do Token. Caso o valor esteja inválido, lança exceção.
+	 * Retorna o e-mail associado a sua conta no PagSeguro. Caso o valor esteja inválido, lança exceção.
+	 * 
 	 * @return String.
-	 * @throws AutorizacaoInvalidaException 
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException 
 	 */
 	public String getEmail() throws AutorizacaoInvalidaException {
 		if (StringUtils.isBlank(email)) {
-			throw new AutorizacaoInvalidaException("Segurança: Email.");
+			throw new AutorizacaoInvalidaException("Configuração: E-mail obrigatório.");
 		}
 		return email;
 	}
 
 	/**
-	 * Insere o ID_CLIENT na instância singleton. Será utilizado internamente pela API no acesso aos serviços remotos.
-	 * @param idCredenciada Long.
+	 * Insere o e-mail na instância singleton. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @param email String.
 	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
 	/**
-	 * Retorna o AUTHENTICATION_CODE para acessar a geração do Token. Caso o valor esteja inválido, lança exceção.
+	 * Retorna o token associado a sua conta no PagSeguro. Caso o valor esteja inválido, lança exceção.
+	 * 
 	 * @return String.
-	 * @throws AutorizacaoInvalidaException 
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException 
 	 */
 	public String getToken() throws AutorizacaoInvalidaException {
 		if (StringUtils.isBlank(token)) {
-			throw new AutorizacaoInvalidaException("Segurança: token.");
+			throw new AutorizacaoInvalidaException("Configuração: Token obrigatório.");
 		}
 		return token;
 	}
 
 	/**
-	 * Insere o AUTHENTICATION_CODE na instância singleton. Será utilizado internamente pela API no acesso aos serviços remotos.
-	 * @param codigoAutenticacao String.
+	 * Insere o token na instância singleton. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @param token String.
 	 */
 	public void setToken(String token) {
 		this.token = token;
 	}
 
+	/**
+	 * Retorna o charset que será utilizado internamente pela API no acesso aos serviços remotos.
+	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "UTF-8".
+	 * 
+	 * @return String.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException 
+	 */
+	public String getCharset() throws ConfiguracaoInvalidaException {
+		if (StringUtils.isBlank(charset)) {
+			throw new ConfiguracaoInvalidaException("Configuração: Charset obrigatório. Default: UTF-8.");
+		}
+		return charset;
+	}
+
+	/**
+	 * Insere o charset na instância singleton. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @param charset String.
+	 */
+	public void setCharset(String charset) {
+		this.charset = charset;
+	}
+
+	/**
+	 * Retorna a URL que será utilizado internamente pela API no acesso a pré autorização da assinatura.
+	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/pre-approvals/request".
+	 * 
+	 * @return String.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
+	 */
+	public String getUrlPreAprovacao() throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		if (StringUtils.isBlank(urlPreAprovacao)) {
+			throw new ConfiguracaoInvalidaException("Configuração: urlPreAprovacao obrigatório.");
+		}
+		urlPreAprovacao = urlPreAprovacao + "?email="+APIConfigSingleton.get().getEmail();
+		urlPreAprovacao = urlPreAprovacao + "&token="+APIConfigSingleton.get().getToken();
+		if(APIConfigSingleton.get().isTeste()){
+			urlPreAprovacao = urlPreAprovacao.replaceAll("ws.pagseguro", "ws.sandbox.pagseguro");
+		}
+		return urlPreAprovacao;
+	}
+
+	/**
+	 * Insere a urlPreAprovacao na instância singleton. Será utilizado internamente pela API no acesso a pré autorização da assinatura.
+	 * 
+	 * @param urlPreAprovacao String.
+	 */
+	public void setUrlPreAprovacao(String urlPreAprovacao) {
+		this.urlPreAprovacao = urlPreAprovacao;
+	}
+
+	/**
+	 * Retorna a URL que será utilizado para redicionamento ao pagamento PagSeguro.
+	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://pagseguro.uol.com.br/v2/pre-approvals/request.html".
+	 * 
+	 * @param codigoPreAprovado String com o código gerado na pré aprovação.
+	 * @return String.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 */
+	public String getUrlPagamento(String codigoPreAprovacao) throws ConfiguracaoInvalidaException {
+		if (StringUtils.isBlank(urlPagamento)) {
+			throw new ConfiguracaoInvalidaException("Configuração: urlPagamento obrigatório.");
+		}
+		urlPagamento = urlPagamento + "?code="+codigoPreAprovacao;
+		if(APIConfigSingleton.get().isTeste()){
+			urlPagamento = urlPagamento.replaceAll("pagseguro.uol", "sandbox.pagseguro.uol");
+		}
+		return urlPagamento;
+	}
+
+	/**
+	 * Insere a urlPagamento na instância singleton. Será utilizado para redicionamento ao pagamento PagSeguro.
+	 * 
+	 * @param urlPagamento String.
+	 */
+	public void setUrlPagamento(String urlPagamento) {
+		this.urlPagamento = urlPagamento;
+	}
+	
+	/**
+	 * Retorna a URL que será utilizado internamente pela API no acesso a consulta de uma notificação de transacao ao PagSeguro.
+	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/transactions/notifications".
+	 * 
+	 * @return String.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
+	 */
+	public String getUrlNotificacaoTransacao(String notificationCode) throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		if (StringUtils.isBlank(urlNotificacaoTransacao)) {
+			throw new ConfiguracaoInvalidaException("Configuração: urlNotificacaoTransacao obrigatório.");
+		}
+		urlNotificacaoTransacao = urlNotificacaoTransacao + "/"+notificationCode;
+		urlNotificacaoTransacao = urlNotificacaoTransacao + "?email="+APIConfigSingleton.get().getEmail();
+		urlNotificacaoTransacao = urlNotificacaoTransacao + "&token="+APIConfigSingleton.get().getToken();
+		if(APIConfigSingleton.get().isTeste()){
+			urlNotificacaoTransacao = urlNotificacaoTransacao.replaceAll("ws.pagseguro", "ws.sandbox.pagseguro");
+		}
+		return urlNotificacaoTransacao;
+	}
+
+	/**
+	 * Insere a urlNotificacaoTransacao na instância singleton. Será utilizado para consulta de um notificação ao PagSeguro.
+	 * 
+	 * @param urlNotificacaoTransacao String.
+	 */
+	public void setUrlNotificacaoTransacao(String urlNotificacaoTransacao) {
+		this.urlNotificacaoTransacao = urlNotificacaoTransacao;
+	}
+	
+	/**
+	 * Retorna a URL que será utilizado internamente pela API no acesso a consulta de uma notificação de assinatura ao PagSeguro.
+	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/pre-approvals/notifications".
+	 * 
+	 * @return String.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
+	 */
+	public String getUrlNotificacaoAssinatura(String notificationCode) throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		if (StringUtils.isBlank(urlNotificacaoAssinatura)) {
+			throw new ConfiguracaoInvalidaException("Configuração: urlNotificacaoAssinatura obrigatório.");
+		}
+		urlNotificacaoAssinatura = urlNotificacaoAssinatura + "/"+notificationCode;
+		urlNotificacaoAssinatura = urlNotificacaoAssinatura + "?email="+APIConfigSingleton.get().getEmail();
+		urlNotificacaoAssinatura = urlNotificacaoAssinatura + "&token="+APIConfigSingleton.get().getToken();
+		if(APIConfigSingleton.get().isTeste()){
+			urlNotificacaoAssinatura = urlNotificacaoAssinatura.replaceAll("ws.pagseguro", "ws.sandbox.pagseguro");
+		}
+		return urlNotificacaoAssinatura;
+	}
+
+	/**
+	 * Insere a urlNotificacaoAssinatura na instância singleton. Será utilizado para consulta de um notificação ao PagSeguro.
+	 * 
+	 * @param urlNotificacaoAssinatura String.
+	 */
+	public void setUrlNotificacaoAssinatura(String urlNotificacaoAssinatura) {
+		this.urlNotificacaoAssinatura = urlNotificacaoAssinatura;
+	}
+
+	/**
+	 * Indica se está marcado para acesso ao ambiente de testes do PagSeguro. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @return boolean.
+	 */
 	public boolean isTeste() {
 		return teste;
 	}
 
+	/**
+	 * Indica que os acessos serão para o ambiente de testes do PagSeguro. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @param teste boolean.
+	 */
 	public void setTeste(boolean teste) {
 		this.teste = teste;
+	}
+	
+	/**
+	 * Retorna a porta do proxy configurado. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @return Integer.
+	 */
+	public Integer getProxyPorta() {
+		return proxyPorta;
+	}
+
+	/**
+	 * Indica a porta do proxy da sua rede. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @param proxyPorta Integer.
+	 */
+	public void setProxyPorta(Integer proxyPorta) {
+		this.proxyPorta = proxyPorta;
+	}
+
+	/**
+	 * Retorna a URI do proxy configurado. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @return String.
+	 */
+	public String getProxyURI() {
+		return proxyURI;
+	}
+
+	/**
+	 * Indica a URI do proxy da sua rede. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @param proxyURI String.
+	 */
+	public void setProxyURI(String proxyURI) {
+		this.proxyURI = proxyURI;
+	}
+
+	/**
+	 * Retorna o usuário do proxy configurado. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @return String.
+	 */
+	public String getProxyUsuario() {
+		return proxyUsuario;
+	}
+
+	/**
+	 * Indica o usuário do proxy da sua rede. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @param proxyUsuario String.
+	 */
+	public void setProxyUsuario(String proxyUsuario) {
+		this.proxyUsuario = proxyUsuario;
+	}
+
+	/**
+	 * Retorna a senha do proxy configurado. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @return String.
+	 */
+	public String getProxySenha() {
+		return proxySenha;
+	}
+
+	/**
+	 * Indica a senha do proxy da sua rede. Será utilizado internamente pela API no acesso aos serviços remotos.
+	 * 
+	 * @param proxySenha String.
+	 */
+	public void setProxySenha(String proxySenha) {
+		this.proxySenha = proxySenha;
 	}
 
 }

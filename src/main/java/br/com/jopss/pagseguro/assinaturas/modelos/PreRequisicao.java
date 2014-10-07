@@ -1,8 +1,8 @@
 package br.com.jopss.pagseguro.assinaturas.modelos;
 
-import br.com.jopss.pagseguro.assinaturas.modelos.suporte.PreAprovacao;
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.Cliente;
 import br.com.jopss.pagseguro.assinaturas.modelos.interfaces.EnvioPagseguro;
+import br.com.jopss.pagseguro.assinaturas.modelos.suporte.PreAprovacao;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;

@@ -6,12 +6,12 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlType
 @XmlEnum(String.class)
-public enum TipoPreAprovacao {
+public enum OrigemCancelamentoTransacao {
 	
-	@XmlEnumValue("manual")
-	MANUAL,
+	@XmlEnumValue("INTERNAL")
+	PAGSEGURO,
 	
-	@XmlEnumValue("auto")
-	AUTOMATICO;
+	@XmlEnumValue("EXTERNAL")
+	INSTITUICOES_FINANCEIRAS;
 	
 }

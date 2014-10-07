@@ -1,9 +1,12 @@
 package br.com.jopss.pagseguro.assinaturas.modelos.suporte;
 
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.PeriodoPreAprovacao;
-import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.TipoPreAprovacao;
+import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.TipoAssinatura;
 import br.com.jopss.pagseguro.assinaturas.util.DateAdapterJaxB;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Date;
+import java.util.Locale;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -14,6 +17,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "preApproval")
 public class PreAprovacao {
 	
+	private DecimalFormat fmt = new DecimalFormat("##0.00", new DecimalFormatSymbols(Locale.US));
+	
 	/**
 	 * Indica se a assinatura será gerenciada pelo PagSeguro (auto) ou pelo 
 	 * Vendedor (manual). Neste caso usaremos o valor "auto". 
@@ -21,7 +26,7 @@ public class PreAprovacao {
 	 * Opcional.
 	 */
 	@XmlElement(name = "charge")
-	private TipoPreAprovacao tipo;
+	private TipoAssinatura tipo;
 	
 	/**
 	 * Nome/Identificador da assinatura. 
@@ -49,7 +54,7 @@ public class PreAprovacao {
 	 * Obrigatório para o modelo automatico.
 	 */
 	@XmlElement(name = "amountPerPayment")
-	private Double valorCobrancaPeriodica;
+	private String valorCobrancaPeriodica;
 	
 	/**
 	 * Valor máximo de cada cobrança. 
@@ -59,7 +64,7 @@ public class PreAprovacao {
 	 * Opcional.
 	 */
 	@XmlElement(name = "maxAmountPerPayment")
-	private Double valorMaximoCobrancaPeriodica;
+	private String valorMaximoCobrancaPeriodica;
 	
 	/**
 	 * Periodicidade da cobrança.
@@ -85,7 +90,7 @@ public class PreAprovacao {
 	 * Obrigatória quando a assinatura é gerenciada pelo vendedor (charge = manual). Não é utilizada quando a assinatura é gerenciada pelo PagSeguro (charge = auto).
 	 */
 	@XmlElement(name = "maxAmountPerPeriod")
-	private Double valorLimiteMensal;
+	private String valorLimiteMensal;
 	
 	/**
 	 * Início da vigência da assinatura. 
@@ -116,21 +121,22 @@ public class PreAprovacao {
 	 * Obrigatória.
 	 */
 	@XmlElement(name = "maxTotalAmount")
-	private Double limiteValorAssinatura;
+	private String limiteValorAssinatura;
 
 	public PreAprovacao() {
 	}
 	
-	public PreAprovacao(String nome, PeriodoPreAprovacao periodo, Date dataInicioCobranca, Date dataFinalCobranca, Double limiteValorAssinatura, Double valorLimiteMensal) {
+	public PreAprovacao(String nome, PeriodoPreAprovacao periodo, Double valorMensalidade, Date dataInicioCobranca, Date dataFinalCobranca, Double limiteValorAssinatura, Double valorLimiteMensal) {
 		this.periodo = periodo;
 		this.dataInicioCobranca = dataInicioCobranca;
 		this.dataFinalCobranca = dataFinalCobranca;
-		this.limiteValorAssinatura = limiteValorAssinatura;
-		this.valorLimiteMensal = valorLimiteMensal;
+		this.limiteValorAssinatura = fmt.format(limiteValorAssinatura);
+		this.valorLimiteMensal = fmt.format(valorLimiteMensal);
 		this.nome = nome;
+		this.valorCobrancaPeriodica= fmt.format(valorMensalidade);
 	}
 
-	public void setTipo(TipoPreAprovacao tipo) {
+	public void setTipo(TipoAssinatura tipo) {
 		this.tipo = tipo;
 	}
 
@@ -142,12 +148,8 @@ public class PreAprovacao {
 		this.descricao = descricao;
 	}
 
-	public void setValorCobrancaPeriodica(Double valorCobrancaPeriodica) {
-		this.valorCobrancaPeriodica = valorCobrancaPeriodica;
-	}
-
 	public void setValorMaximoCobrancaPeriodica(Double valorMaximoCobrancaPeriodica) {
-		this.valorMaximoCobrancaPeriodica = valorMaximoCobrancaPeriodica;
+		this.valorMaximoCobrancaPeriodica = fmt.format(valorMaximoCobrancaPeriodica);
 	}
 
 	public void setLimiteCobrancasPorPeriodo(Integer limiteCobrancasPorPeriodo) {
@@ -155,7 +157,7 @@ public class PreAprovacao {
 	}
 
 	public void setValorLimiteMensal(Double valorLimiteMensal) {
-		this.valorLimiteMensal = valorLimiteMensal;
+		this.valorLimiteMensal = fmt.format(valorLimiteMensal);
 	}
 	
 }

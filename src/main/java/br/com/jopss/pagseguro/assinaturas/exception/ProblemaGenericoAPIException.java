@@ -1,6 +1,6 @@
 package br.com.jopss.pagseguro.assinaturas.exception;
 
-public class ProblemaGenericoAPIException extends Exception {
+public class ProblemaGenericoAPIException extends PagSeguroException {
 
 	public ProblemaGenericoAPIException(String message) {
 		super(message);

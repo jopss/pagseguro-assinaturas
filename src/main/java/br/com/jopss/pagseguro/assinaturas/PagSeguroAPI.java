@@ -1,7 +1,5 @@
 package br.com.jopss.pagseguro.assinaturas;
 
-import br.com.jopss.pagseguro.assinaturas.requisicao.RequisicaoAssinatura;
-
 public final class PagSeguroAPI {
 	
 	/**

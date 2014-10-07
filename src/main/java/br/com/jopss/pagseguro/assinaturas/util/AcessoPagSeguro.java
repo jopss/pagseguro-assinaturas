@@ -1,12 +1,12 @@
 package br.com.jopss.pagseguro.assinaturas.util;
 
+import br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException;
 import br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException;
 import br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException;
 import br.com.jopss.pagseguro.assinaturas.modelos.ErrosPagSeguro;
 import br.com.jopss.pagseguro.assinaturas.modelos.interfaces.EnvioPagseguro;
 import br.com.jopss.pagseguro.assinaturas.modelos.interfaces.RespostaPagseguro;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,8 +19,12 @@ import java.net.Proxy;
 import java.net.URL;
 import org.apache.commons.lang.StringUtils;
 
-public final class AcessoAPI {
+public final class AcessoPagSeguro {
 
+	public <T> T acessoGET(String sUrl, Class<? extends RespostaPagseguro> clazz) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException {
+		return this.acessarURL(sUrl, null, clazz, false, null);
+	}
+	
 	public <T> T acessoPOST(String sUrl, Class<? extends RespostaPagseguro> clazz, EnvioPagseguro envio) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException {
 		return this.acessarURL(sUrl, null, clazz, true, XMLUtil.objetoParaXML(envio));
 	}
@@ -29,42 +33,28 @@ public final class AcessoAPI {
 		try {
 			URL url = new URL(sUrl + (StringUtils.isNotBlank(requestQuery) ? requestQuery : ""));
 
-			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("cache.bb.com.br", 80));
-			Authenticator authenticator = new Authenticator() {
-				public PasswordAuthentication getPasswordAuthentication() {
-					return (new PasswordAuthentication("c1276009","34742132".toCharArray()));
-				}
-			};
-			Authenticator.setDefault(authenticator);
-
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection(proxy);
+			HttpURLConnection conn = null;
+			if(APIConfigSingleton.get().proxyConfigurado()){
+				Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(APIConfigSingleton.get().getProxyURI(), APIConfigSingleton.get().getProxyPorta()));
+				Authenticator authenticator = new Authenticator() {
+					@Override
+					public PasswordAuthentication getPasswordAuthentication() {
+						return (new PasswordAuthentication(APIConfigSingleton.get().getProxyUsuario(),
+							APIConfigSingleton.get().getProxySenha().toCharArray()));
+					}
+				};
+				Authenticator.setDefault(authenticator);
+				conn = (HttpURLConnection) url.openConnection(proxy);
+			}else{
+				conn = (HttpURLConnection) url.openConnection();
+			}
+			
 			conn.setUseCaches(false);
-			conn.usingProxy();
 
-//			if(sUrl.startsWith("https")){
-//				HttpsURLConnection httpsConn = (HttpsURLConnection) url.openConnection();
-//				
-//				InputStream fileKeyStore = this.retornarArquivoCertificado();
-//				KeyStore keyStore = KeyStore.getInstance("JKS");
-//				keyStore.load(fileKeyStore, null);
-//				fileKeyStore.close();
-//				
-//				TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-//				tmf.init(keyStore);
-//				
-//				SSLContext ctx = SSLContext.getInstance("TLS");
-//				ctx.init(null, tmf.getTrustManagers(), null);
-//				SSLSocketFactory sslFactory = ctx.getSocketFactory();
-//				httpsConn.setSSLSocketFactory(sslFactory);
-//				
-//				conn = httpsConn;
-//			}else{
-//				conn = (HttpURLConnection) url.openConnection();
-//			}
 			OutputStreamWriter writer = null;
 			if (post) {
 				conn.setDoOutput(true);
-				conn.setRequestProperty("Content-Type", "application/xml; charset=" + ParametrosAPI.getURLEncoding());
+				conn.setRequestProperty("Content-Type", "application/xml; charset=" + APIConfigSingleton.get().getCharset());
 				conn.setRequestProperty("Content-Length", "" + Integer.toString(xmlEnvio.getBytes().length));
 				conn.setRequestMethod("POST");
 
@@ -72,18 +62,18 @@ public final class AcessoAPI {
 				writer.write(xmlEnvio);
 				writer.flush();
 			} else {
-				conn.setRequestProperty("Content-Type", "application/xml; charset=" + ParametrosAPI.getURLEncoding());
+				conn.setRequestProperty("Content-Type", "application/xml; charset=" + APIConfigSingleton.get().getCharset());
 			}
 
 			BufferedReader bufferedreader = null;
 			try {
-				bufferedreader = new BufferedReader(new InputStreamReader(conn.getInputStream(), ParametrosAPI.getURLEncoding()));
+				bufferedreader = new BufferedReader(new InputStreamReader(conn.getInputStream(), APIConfigSingleton.get().getCharset()));
 			} catch (IOException e) {
 				InputStream in = conn.getErrorStream();
 				if (in == null) {
 					throw new ProblemaGenericoAPIException("Sem acesso ao recurso remoto. O sistema por estar fora do ar. Verifique a URL ou tente novamente mais tarde. Tentativa em: '" + url + "'");
 				}
-				bufferedreader = new BufferedReader(new InputStreamReader(in, ParametrosAPI.getURLEncoding()));
+				bufferedreader = new BufferedReader(new InputStreamReader(in, APIConfigSingleton.get().getCharset()));
 			}
 
 			String xmlResposta = "";
@@ -104,19 +94,19 @@ public final class AcessoAPI {
 			RespostaPagseguro resp = null;
 			if(xmlResposta.contains("<errors>")){
 				throw new ErrosRemotosPagSeguroException( (ErrosPagSeguro) XMLUtil.xmlParaObjeto(xmlResposta, ErrosPagSeguro.class));
+			}else if(xmlResposta.charAt(0) != '<'){
+				throw new ProblemaGenericoAPIException(xmlResposta);
 			}else{
 				resp = XMLUtil.xmlParaObjeto(xmlResposta, clazz);
 			}
 			
 			return (T) resp;
 
-		} catch (Exception ex) {
+		} catch (ErrosRemotosPagSeguroException | ProblemaGenericoAPIException ex) {
+			throw ex;
+		} catch (ConfiguracaoInvalidaException | IOException ex) {
 			throw new ProblemaGenericoAPIException(ex);
 		}
-	}
-
-	private InputStream retornarArquivoCertificado() throws FileNotFoundException {
-		return ParametrosAPI.class.getResourceAsStream("/pagseguro_ws_keystore");
 	}
 
 }

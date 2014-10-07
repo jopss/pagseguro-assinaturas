@@ -18,7 +18,7 @@ public class TesteXMLUtil {
 		
 		Date dataInicial = new Date();
 		Date dataFinal = new Date();
-		PreAprovacao preAprovacao = new PreAprovacao(PeriodoPreAprovacao.MENSAL, dataInicial, dataFinal, 18762.55);
+		PreAprovacao preAprovacao = new PreAprovacao("TesteSL", PeriodoPreAprovacao.MENSAL, 50.0, dataInicial, dataFinal, 18762.55, 1998.11);
 		
 		PreRequisicao pre = new PreRequisicao(preAprovacao);
 		pre.setIdReferenciaLocal("referencia123");

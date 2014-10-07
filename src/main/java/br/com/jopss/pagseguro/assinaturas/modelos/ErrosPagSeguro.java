@@ -28,6 +28,10 @@ public class ErrosPagSeguro implements RespostaPagseguro {
 		
 		@XmlElement(name = "message")
 		private String mensagem;
+		
+		public String getCodigoEMensagem(){
+			return codigo+" - "+mensagem;
+		}
 
 		public Integer getCodigo() {
 			return codigo;
