@@ -16,12 +16,6 @@ public final class APIConfigSingleton {
 	private String email;
 	private String token;
 	private String charset = "UTF-8";
-	private String urlPreAprovacao = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/request";
-	private String urlPagamento = "https://pagseguro.uol.com.br/v2/pre-approvals/request.html";
-	private String urlNotificacaoTransacao = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications";
-	private String urlNotificacaoAssinatura = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/notifications";
-	private String urlCobranca = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/payment";
-	private String urlCancelamento = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/cancel";
 
 	private Integer proxyPorta;
 	private String proxyURI;
@@ -54,6 +48,30 @@ public final class APIConfigSingleton {
 		this.email = null;
 		this.token = null;
 		teste = false;
+	}
+	
+	public String getDefaultUrlPreAprovacao(){
+		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/request";
+	}
+	
+	public String getDefaultUrlPagamento(){
+		return "https://pagseguro.uol.com.br/v2/pre-approvals/request.html";
+	}
+	
+	public String getDefaultUrlNotificacaoTransacao(){
+		return "https://ws.pagseguro.uol.com.br/v2/transactions/notifications";
+	}
+	
+	public String getDefaultUrlNotificacaoAssinatura(){
+		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/notifications";
+	}
+	
+	public String getDefaultUrlCobranca(){
+		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/payment";
+	}
+	
+	public String getDefaultUrlCancelamento(){
+		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/cancel";
 	}
 	
 	public boolean proxyConfigurado(){
@@ -139,6 +157,7 @@ public final class APIConfigSingleton {
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 	 */
 	public String getUrlPreAprovacao() throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		String urlPreAprovacao = this.getDefaultUrlPreAprovacao();
 		if (StringUtils.isBlank(urlPreAprovacao)) {
 			throw new ConfiguracaoInvalidaException("Configuração: urlPreAprovacao obrigatório.");
 		}
@@ -151,23 +170,15 @@ public final class APIConfigSingleton {
 	}
 
 	/**
-	 * Insere a urlPreAprovacao na instância singleton. Será utilizado internamente pela API no acesso a pré autorização da assinatura.
-	 * 
-	 * @param urlPreAprovacao String.
-	 */
-	public void setUrlPreAprovacao(String urlPreAprovacao) {
-		this.urlPreAprovacao = urlPreAprovacao;
-	}
-
-	/**
 	 * Retorna a URL que será utilizado para redicionamento ao pagamento PagSeguro.
 	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://pagseguro.uol.com.br/v2/pre-approvals/request.html".
 	 * 
-	 * @param codigoPreAprovado String com o código gerado na pré aprovação.
+	 * @param codigoPreAprovacao String com o código gerado na pré aprovação.
 	 * @return String.
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
 	 */
 	public String getUrlPagamento(String codigoPreAprovacao) throws ConfiguracaoInvalidaException {
+		String urlPagamento = this.getDefaultUrlPagamento();
 		if (StringUtils.isBlank(urlPagamento)) {
 			throw new ConfiguracaoInvalidaException("Configuração: urlPagamento obrigatório.");
 		}
@@ -176,15 +187,6 @@ public final class APIConfigSingleton {
 			urlPagamento = urlPagamento.replaceAll("pagseguro.uol", "sandbox.pagseguro.uol");
 		}
 		return urlPagamento;
-	}
-
-	/**
-	 * Insere a urlPagamento na instância singleton. Será utilizado para redicionamento ao pagamento PagSeguro.
-	 * 
-	 * @param urlPagamento String.
-	 */
-	public void setUrlPagamento(String urlPagamento) {
-		this.urlPagamento = urlPagamento;
 	}
 	
 	/**
@@ -196,6 +198,7 @@ public final class APIConfigSingleton {
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 	 */
 	public String getUrlNotificacaoTransacao(String notificationCode) throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		String urlNotificacaoTransacao = this.getDefaultUrlNotificacaoTransacao();
 		if (StringUtils.isBlank(urlNotificacaoTransacao)) {
 			throw new ConfiguracaoInvalidaException("Configuração: urlNotificacaoTransacao obrigatório.");
 		}
@@ -207,25 +210,18 @@ public final class APIConfigSingleton {
 		}
 		return urlNotificacaoTransacao;
 	}
-
-	/**
-	 * Insere a urlNotificacaoTransacao na instância singleton. Será utilizado para consulta de um notificação ao PagSeguro.
-	 * 
-	 * @param urlNotificacaoTransacao String.
-	 */
-	public void setUrlNotificacaoTransacao(String urlNotificacaoTransacao) {
-		this.urlNotificacaoTransacao = urlNotificacaoTransacao;
-	}
 	
 	/**
 	 * Retorna a URL que será utilizado internamente pela API no acesso a consulta de uma notificação de assinatura ao PagSeguro.
 	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/pre-approvals/notifications".
 	 * 
+	 * @param notificationCode String
 	 * @return String.
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 	 */
 	public String getUrlNotificacaoAssinatura(String notificationCode) throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		String urlNotificacaoAssinatura = this.getDefaultUrlNotificacaoAssinatura();
 		if (StringUtils.isBlank(urlNotificacaoAssinatura)) {
 			throw new ConfiguracaoInvalidaException("Configuração: urlNotificacaoAssinatura obrigatório.");
 		}
@@ -239,15 +235,6 @@ public final class APIConfigSingleton {
 	}
 
 	/**
-	 * Insere a urlNotificacaoAssinatura na instância singleton. Será utilizado para consulta de um notificação ao PagSeguro.
-	 * 
-	 * @param urlNotificacaoAssinatura String.
-	 */
-	public void setUrlNotificacaoAssinatura(String urlNotificacaoAssinatura) {
-		this.urlNotificacaoAssinatura = urlNotificacaoAssinatura;
-	}
-
-	/**
 	 * Retorna a URL que será utilizado internamente pela API para envio de uma cobrança de mensalidade ao PagSeguro.
 	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/pre-approvals/payment".
 	 * 
@@ -256,6 +243,7 @@ public final class APIConfigSingleton {
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 	 */
 	public String getUrlCobranca() throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		String urlCobranca = this.getDefaultUrlCobranca();
 		if (StringUtils.isBlank(urlCobranca)) {
 			throw new ConfiguracaoInvalidaException("Configuração: urlCobranca obrigatório.");
 		}
@@ -268,15 +256,6 @@ public final class APIConfigSingleton {
 	}
 
 	/**
-	 * Insere a urlCobranca na instância singleton. Será utilizado para envio de uma cobrança de mensalidade ao PagSeguro.
-	 * 
-	 * @param urlCobranca String.
-	 */
-	public void setUrlCobranca(String urlCobranca) {
-		this.urlCobranca = urlCobranca;
-	}
-
-	/**
 	 * Retorna a URL que será utilizado internamente pela API para envio de um cancelamento de mensalidade ao PagSeguro.
 	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/pre-approvals/cancel".
 	 * 
@@ -286,25 +265,17 @@ public final class APIConfigSingleton {
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 	 */
 	public String getUrlCancelamento(String codigoMensalidade) throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		String urlCancelamento = this.getDefaultUrlCancelamento();
 		if (StringUtils.isBlank(urlCancelamento)) {
 			throw new ConfiguracaoInvalidaException("Configuração: urlCancelamento obrigatório.");
 		}
-		urlNotificacaoAssinatura = urlNotificacaoAssinatura + "/"+codigoMensalidade;
+		urlCancelamento = urlCancelamento + "/"+codigoMensalidade;
 		urlCancelamento = urlCancelamento + "?email="+APIConfigSingleton.get().getEmail();
 		urlCancelamento = urlCancelamento + "&token="+APIConfigSingleton.get().getToken();
 		if(APIConfigSingleton.get().isTeste()){
 			urlCancelamento = urlCancelamento.replaceAll("ws.pagseguro", "ws.sandbox.pagseguro");
 		}
 		return urlCancelamento;
-	}
-
-	/**
-	 * Insere a urlCancelamento na instância singleton. Será utilizado para envio de um cancelamento de mensalidade ao PagSeguro.
-	 * 
-	 * @param urlCancelamento String.
-	 */
-	public void setUrlCancelamento(String urlCancelamento) {
-		this.urlCancelamento = urlCancelamento;
 	}
 
 	/**
