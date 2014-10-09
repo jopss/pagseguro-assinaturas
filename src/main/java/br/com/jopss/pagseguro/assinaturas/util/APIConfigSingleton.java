@@ -20,6 +20,8 @@ public final class APIConfigSingleton {
 	private String urlPagamento = "https://pagseguro.uol.com.br/v2/pre-approvals/request.html";
 	private String urlNotificacaoTransacao = "https://ws.pagseguro.uol.com.br/v2/transactions/notifications";
 	private String urlNotificacaoAssinatura = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/notifications";
+	private String urlCobranca = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/payment";
+	private String urlCancelamento = "https://ws.pagseguro.uol.com.br/v2/pre-approvals/cancel";
 
 	private Integer proxyPorta;
 	private String proxyURI;
@@ -243,6 +245,66 @@ public final class APIConfigSingleton {
 	 */
 	public void setUrlNotificacaoAssinatura(String urlNotificacaoAssinatura) {
 		this.urlNotificacaoAssinatura = urlNotificacaoAssinatura;
+	}
+
+	/**
+	 * Retorna a URL que será utilizado internamente pela API para envio de uma cobrança de mensalidade ao PagSeguro.
+	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/pre-approvals/payment".
+	 * 
+	 * @return String.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
+	 */
+	public String getUrlCobranca() throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		if (StringUtils.isBlank(urlCobranca)) {
+			throw new ConfiguracaoInvalidaException("Configuração: urlCobranca obrigatório.");
+		}
+		urlCobranca = urlCobranca + "?email="+APIConfigSingleton.get().getEmail();
+		urlCobranca = urlCobranca + "&token="+APIConfigSingleton.get().getToken();
+		if(APIConfigSingleton.get().isTeste()){
+			urlCobranca = urlCobranca.replaceAll("ws.pagseguro", "ws.sandbox.pagseguro");
+		}
+		return urlCobranca;
+	}
+
+	/**
+	 * Insere a urlCobranca na instância singleton. Será utilizado para envio de uma cobrança de mensalidade ao PagSeguro.
+	 * 
+	 * @param urlCobranca String.
+	 */
+	public void setUrlCobranca(String urlCobranca) {
+		this.urlCobranca = urlCobranca;
+	}
+
+	/**
+	 * Retorna a URL que será utilizado internamente pela API para envio de um cancelamento de mensalidade ao PagSeguro.
+	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/pre-approvals/cancel".
+	 * 
+	 * @param codigoMensalidade String com o código da mensalidade.
+	 * @return String.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
+	 */
+	public String getUrlCancelamento(String codigoMensalidade) throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		if (StringUtils.isBlank(urlCancelamento)) {
+			throw new ConfiguracaoInvalidaException("Configuração: urlCancelamento obrigatório.");
+		}
+		urlNotificacaoAssinatura = urlNotificacaoAssinatura + "/"+codigoMensalidade;
+		urlCancelamento = urlCancelamento + "?email="+APIConfigSingleton.get().getEmail();
+		urlCancelamento = urlCancelamento + "&token="+APIConfigSingleton.get().getToken();
+		if(APIConfigSingleton.get().isTeste()){
+			urlCancelamento = urlCancelamento.replaceAll("ws.pagseguro", "ws.sandbox.pagseguro");
+		}
+		return urlCancelamento;
+	}
+
+	/**
+	 * Insere a urlCancelamento na instância singleton. Será utilizado para envio de um cancelamento de mensalidade ao PagSeguro.
+	 * 
+	 * @param urlCancelamento String.
+	 */
+	public void setUrlCancelamento(String urlCancelamento) {
+		this.urlCancelamento = urlCancelamento;
 	}
 
 	/**

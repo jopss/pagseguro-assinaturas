@@ -5,7 +5,7 @@ import br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 import br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException;
 import br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException;
 import br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException;
-import br.com.jopss.pagseguro.assinaturas.modelos.PreRequisicao;
+import br.com.jopss.pagseguro.assinaturas.modelos.EnvioPreRequisicao;
 import br.com.jopss.pagseguro.assinaturas.modelos.RespostaPreAprovacao;
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.PreAprovacao;
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.PeriodoPreAprovacao;
@@ -24,9 +24,10 @@ public class TestePreAutorizacao {
 		try {
 			Date dataInicial = new Date();
 			Date dataFinal = new DateTime().plusMonths(1).toDate();
-			PreAprovacao preAprovacao = new PreAprovacao("TesteSL", PeriodoPreAprovacao.MENSAL, 50.0, dataInicial, dataFinal, 18762.55, 1998.11);
+			PreAprovacao preAprovacao = new PreAprovacao("TesteSL", PeriodoPreAprovacao.MENSAL, 50.0, dataInicial, dataFinal, 18762.55);
+			preAprovacao.setValorLimiteMensal(1998.11);
 			
-			PreRequisicao pre = new PreRequisicao(preAprovacao);
+			EnvioPreRequisicao pre = new EnvioPreRequisicao(preAprovacao);
 			pre.setIdReferenciaLocal("referencia123");
 			pre.setUrlRedirecionamentoAposConfirmacao("http://www.cachorro.com.br");
 			

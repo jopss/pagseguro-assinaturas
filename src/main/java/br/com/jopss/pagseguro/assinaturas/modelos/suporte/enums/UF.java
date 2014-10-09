@@ -4,10 +4,8 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * Enum com a lista de UF's para consultas.
  * @author João Paulo Sossoloti.
  */
-
 @XmlType
 @XmlEnum(String.class)
 public enum UF {

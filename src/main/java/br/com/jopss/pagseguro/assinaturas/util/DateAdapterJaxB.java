@@ -4,9 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
+/**
+ * Classe utilitária para customizar o formato de data parseado pelo XML.
+ * 
+ * @author João Paulo Sossoloti.
+ */
 public class DateAdapterJaxB extends XmlAdapter<String, Date> {
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
     @Override
     public String marshal(Date v) throws Exception {

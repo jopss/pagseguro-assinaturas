@@ -2,9 +2,12 @@ package br.com.jopss.pagseguro.assinaturas.exception;
 
 import br.com.jopss.pagseguro.assinaturas.modelos.ErrosPagSeguro;
 
+/**
+ * @author João Paulo Sossoloti.
+ */
 public class ErrosRemotosPagSeguroException extends Exception {
 
-	private ErrosPagSeguro errosPagSeguro;
+	private final ErrosPagSeguro errosPagSeguro;
 	
 	public ErrosRemotosPagSeguroException(ErrosPagSeguro errosPagSeguro) {
 		super(errosPagSeguro.toString());
@@ -12,10 +15,7 @@ public class ErrosRemotosPagSeguroException extends Exception {
 	}
 
 	public boolean contemErros(){
-		if(errosPagSeguro !=null){
-			return true;
-		}
-		return false;
+		return errosPagSeguro !=null;
 	}
 	
 	public ErrosPagSeguro getErrosPagSeguro() {

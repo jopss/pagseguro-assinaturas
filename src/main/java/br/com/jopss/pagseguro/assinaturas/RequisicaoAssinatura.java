@@ -4,7 +4,10 @@ import br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 import br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException;
 import br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException;
 import br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException;
-import br.com.jopss.pagseguro.assinaturas.modelos.PreRequisicao;
+import br.com.jopss.pagseguro.assinaturas.modelos.EnvioCobranca;
+import br.com.jopss.pagseguro.assinaturas.modelos.EnvioPreRequisicao;
+import br.com.jopss.pagseguro.assinaturas.modelos.RespostaCancelamento;
+import br.com.jopss.pagseguro.assinaturas.modelos.RespostaCobranca;
 import br.com.jopss.pagseguro.assinaturas.modelos.RespostaPreAprovacao;
 import br.com.jopss.pagseguro.assinaturas.util.APIConfigSingleton;
 import br.com.jopss.pagseguro.assinaturas.util.AcessoPagSeguro;
@@ -12,7 +15,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Para de serviço para acessos a registro de assinaturas.
+ * Classe de serviço para acessos a registro de assinaturas.
  * Entende-se por assinatura a recorrência de um pagamento por um período de tempo.
  * 
  * @author João Paulo Sossoloti.
@@ -25,14 +28,14 @@ public final class RequisicaoAssinatura {
 	 * Nesta etapa, passamos todos os dados de registro da assinatura, com valores, período, etc.
 	 * Com o código retornado em mãos, podemos efetivar a autorização redirecionando para a página de pagamento.
 	 * 
-	 * @param preRequisicao PreRequisicao com os dados da assinatura e do cliente.
+	 * @param preRequisicao EnvioPreRequisicao com os dados da assinatura e do cliente.
 	 * @return {@link br.com.jopss.pagseguro.assinaturas.modelos.RespostaPreAprovacao} resposta com código do cliente e data, para iniciar fluxo de pagamento.
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 	 */
-	public RespostaPreAprovacao preAprovacao(PreRequisicao preRequisicao) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException, ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+	public RespostaPreAprovacao preAprovacao(EnvioPreRequisicao preRequisicao) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException, ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
 		return new AcessoPagSeguro().acessoPOST( APIConfigSingleton.get().getUrlPreAprovacao(), RespostaPreAprovacao.class, preRequisicao );
 	}
 	
@@ -52,6 +55,36 @@ public final class RequisicaoAssinatura {
 		} catch (IOException ex) {
 			throw new ProblemaGenericoAPIException(ex);
 		}
+	}
+	
+	/**
+	 * Método de acesso HTTP POST.
+	 * Efetiva uma cobraça para uma mensalidade.
+	 * 
+	 * @param envioCobranca EnvioCobranca com os dados da mensalidade a ser pago.
+	 * @return {@link br.com.jopss.pagseguro.assinaturas.modelos.RespostaNotificacaoTransacao}.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
+	 */
+	public RespostaCobranca enviar(EnvioCobranca envioCobranca) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException, ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		return new AcessoPagSeguro().acessoPOST( APIConfigSingleton.get().getUrlCobranca(), RespostaCobranca.class, envioCobranca );
+	}
+	
+	/**
+	 * Método de acesso HTTP GET.
+	 * Efetua o cancelamento de uma assinatura no PagSeguro.
+	 * 
+	 * @param codigoMensalidade String com o número da assinatura a ser cancelada.
+	 * @return {@link br.com.jopss.pagseguro.assinaturas.modelos.RespostaNotificacaoAssinatura}.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
+	 */
+	public RespostaCancelamento cancelar(String codigoMensalidade) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException, ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		return new AcessoPagSeguro().acessoGET( APIConfigSingleton.get().getUrlCancelamento(codigoMensalidade), RespostaCancelamento.class );
 	}
 	
 }

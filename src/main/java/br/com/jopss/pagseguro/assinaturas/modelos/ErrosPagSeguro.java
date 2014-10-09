@@ -8,6 +8,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Classe de resposta de erros do PagSeguro.
+ * 
+ * @author João Paulo Sossoloti.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "errors")
 public class ErrosPagSeguro implements RespostaPagseguro {
@@ -37,16 +42,8 @@ public class ErrosPagSeguro implements RespostaPagseguro {
 			return codigo;
 		}
 
-		public void setCodigo(Integer codigo) {
-			this.codigo = codigo;
-		}
-
 		public String getMensagem() {
 			return mensagem;
-		}
-
-		public void setMensagem(String mensagem) {
-			this.mensagem = mensagem;
 		}
 
 		@Override

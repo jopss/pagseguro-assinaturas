@@ -19,6 +19,11 @@ import java.net.Proxy;
 import java.net.URL;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * Classe utilitária para acessos HTTP (GET ou POST).
+ * 
+ * @author João Paulo Sossoloti.
+ */
 public final class AcessoPagSeguro {
 
 	public <T> T acessoGET(String sUrl, Class<? extends RespostaPagseguro> clazz) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException {

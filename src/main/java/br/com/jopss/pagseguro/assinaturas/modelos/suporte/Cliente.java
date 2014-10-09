@@ -5,25 +5,18 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * Classe modelo de suporte com dados do cliente da assinatura.
+ * 
+ * @author João Paulo Sossoloti.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "sender")
 public class Cliente {
 	
-	/**
-	 * Nome completo do comprador. 
-	 * 
-	 * Formato: Livre, com no mínimo duas sequências de strings e limite total de 50 caracteres. 
-	 * Opcional.
-	 */
 	@XmlElement(name = "name")
 	private String nome;
 	
-	/**
-	 * E-mail do comprador. 
-	 * 
-	 * Formato: Um e-mail válido, com limite de 60 caracteres. 
-	 * Opcional.
-	 */
 	@XmlElement(name = "email")
 	private String email;
 
@@ -32,19 +25,53 @@ public class Cliente {
 	
 	@XmlElement(name = "address")
 	private Endereco endereco;
-
+	
+	/**
+	 * Nome completo do comprador.
+	 * <ul>
+	 *	<li>Formato: Texto, com no mínimo duas sequências de strings, de 50 caracteres.</li>
+	 *	<li>Opcional.</li>
+	 * </ul>
+	 * 
+	 * @param nome String
+	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
+	
+	/**
+	 * E-mail do comprador.
+	 * <ul>
+	 *	<li>Formato: Texto, um e-mail válido, com limite de 60 caracteres. </li>
+	 *	<li>Opcional.</li>
+	 * </ul>
+	 * 
+	 * @param email String
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
+	/**
+	 * Telefone do comprador.
+	 * <ul>
+	 *	<li>Opcional.</li>
+	 * </ul>
+	 * 
+	 * @param telefone Telefone
+	 */
 	public void setTelefone(Telefone telefone) {
 		this.telefone = telefone;
 	}
 
+	/**
+	 * Endereco do comprador.
+	 * <ul>
+	 *	<li>Opcional.</li>
+	 * </ul>
+	 * 
+	 * @param endereco Endereco
+	 */
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}

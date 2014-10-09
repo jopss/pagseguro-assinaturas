@@ -38,34 +38,6 @@ public final class ConfiguracaoAPI {
 	}
 
 	/**
-	 * Adiciona na configuração a URL da pré autorização.
-	 * Opcional, já existe a configuração interna para a url 'https://ws.pagseguro.uol.com.br/v2/pre-approvals/request'.
-	 * Altere se achar necessário. Internamente ele irá adicionar os parâmetro da requisição 'email' e 'token', bem como
-	 * verificar se é para acessar o 'sandbox' para testes.
-	 * 
-	 * @param urlPreAprovacao String.
-	 * @return ConfiguracaoAPI
-	 */
-	public ConfiguracaoAPI setUrlPreAprovacao(String urlPreAprovacao) {
-		APIConfigSingleton.get().setUrlPreAprovacao(urlPreAprovacao);
-		return this;
-	}
-	
-	/**
-	 * Adiciona na configuração a URL para redicionamento ao pagamento PagSeguro.
-	 * Opcional, já existe a configuração interna para a url 'https://pagseguro.uol.com.br/v2/pre-approvals/request.html'.
-	 * Altere se achar necessário. Internamente ele irá adicionar o parâmetro da requisição 'code', bem como
-	 * verificar se é para acessar o 'sandbox' para testes.
-	 * 
-	 * @param urlPagamento String.
-	 * @return ConfiguracaoAPI
-	 */
-	public ConfiguracaoAPI setUrlPagamento(String urlPagamento) {
-		APIConfigSingleton.get().setUrlPagamento(urlPagamento);
-		return this;
-	}
-	
-	/**
 	 * Adiciona na configuração o charset de acessos ao serviços remotos.
 	 * Opcional, já existe a configuração interna para 'UTF-8'.
 	 * Altere se achar necessário.

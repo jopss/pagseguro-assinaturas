@@ -10,36 +10,36 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
- * Classe de resposta sobre a pré requisição, passo inicial ao cadastramento de uma assinatura.
+ * Classe de resposta sobre cobrança de uma assinatura.
  * 
  * @author João Paulo Sossoloti.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "preApprovalRequest")
-public class RespostaPreAprovacao implements RespostaPagseguro {
+@XmlRootElement(name = "result")
+public class RespostaCobranca implements RespostaPagseguro {
 	
-	@XmlElement(name = "code")
-	private String codigo;
+	@XmlElement(name = "transactionCode")
+	private String codigoTransacao;
 	
 	@XmlElement(name = "date")
 	@XmlJavaTypeAdapter(DateAdapterJaxB.class)
 	private Date data;
 
 	/**
-	 * Código de requisição criado. Este código deve ser usado para direcionar o comprador para o fluxo de aprovação. 
+	 * Código identificador da transação.
 	 * <ul>
-	 *	<li>Formato: Texto com 32 caracteres.</li>
+	 *	<li>Formato: Texto de 32 caracteres.</li>
 	 *	<li>Obrigatorio.</li>
 	 * </ul>
 	 * 
 	 * @return String
 	 */
-	public String getCodigo() {
-		return codigo;
+	public String getCodigoTransacao() {
+		return codigoTransacao;
 	}
 
 	/**
-	 * Data da requisição.
+	 * Data da cobrança não presencial.
 	 * <ul>
 	 *	<li>Formato: Data/Hora, YYYY-MM-DDThh:mm:ss.sTZD.</li>
 	 *	<li>Obrigatorio.</li>

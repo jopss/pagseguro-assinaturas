@@ -2,7 +2,7 @@ package br.com.jopss.pagseguro.assinaturas.util.test;
 
 import br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException;
 import br.com.jopss.pagseguro.assinaturas.modelos.ErrosPagSeguro;
-import br.com.jopss.pagseguro.assinaturas.modelos.PreRequisicao;
+import br.com.jopss.pagseguro.assinaturas.modelos.EnvioPreRequisicao;
 import br.com.jopss.pagseguro.assinaturas.modelos.interfaces.RespostaPagseguro;
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.PreAprovacao;
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.PeriodoPreAprovacao;
@@ -18,9 +18,10 @@ public class TesteXMLUtil {
 		
 		Date dataInicial = new Date();
 		Date dataFinal = new Date();
-		PreAprovacao preAprovacao = new PreAprovacao("TesteSL", PeriodoPreAprovacao.MENSAL, 50.0, dataInicial, dataFinal, 18762.55, 1998.11);
+		PreAprovacao preAprovacao = new PreAprovacao("TesteSL", PeriodoPreAprovacao.MENSAL, 50.0, dataInicial, dataFinal, 18762.55);
+		preAprovacao.setValorLimiteMensal(1998.11);
 		
-		PreRequisicao pre = new PreRequisicao(preAprovacao);
+		EnvioPreRequisicao pre = new EnvioPreRequisicao(preAprovacao);
 		pre.setIdReferenciaLocal("referencia123");
 		pre.setUrlRedirecionamentoAposConfirmacao("http://www.cachorro.com.br");
 		
