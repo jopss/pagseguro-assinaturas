@@ -1,5 +1,6 @@
 package br.com.jopss.pagseguro.assinaturas.util;
 
+import br.com.jopss.pagseguro.assinaturas.ConfiguracaoAPI;
 import br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException;
 import br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException;
 import br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException;
@@ -55,6 +56,10 @@ public final class AcessoPagSeguro {
 			}
 			
 			conn.setUseCaches(false);
+			
+			if(APIConfigSingleton.get().isTeste()){
+				conn.setRequestProperty("access-control-allow-origin", "https://sandbox.pagseguro.uol.com.br");
+			}
 
 			OutputStreamWriter writer = null;
 			if (post) {
