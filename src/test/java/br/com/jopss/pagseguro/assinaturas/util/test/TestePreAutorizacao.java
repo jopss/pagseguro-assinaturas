@@ -12,6 +12,7 @@ import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.PeriodoPreAprova
 import java.util.Date;
 import org.joda.time.DateTime;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class TestePreAutorizacao {
 
@@ -24,15 +25,16 @@ public class TestePreAutorizacao {
 		try {
 			Date dataInicial = new Date();
 			Date dataFinal = new DateTime().plusMonths(1).toDate();
-			PreAprovacao preAprovacao = new PreAprovacao("TesteSL", PeriodoPreAprovacao.MENSAL, 50.0, dataInicial, dataFinal, 18762.55);
-			preAprovacao.setValorLimiteMensal(1998.11);
+                        
+			PreAprovacao pre = new PreAprovacao("TesteSL", PeriodoPreAprovacao.MENSAL, 50.0, dataInicial, dataFinal, 18762.55);
+			pre.setValorLimiteMensal(1998.11);
 			
-			EnvioPreRequisicao pre = new EnvioPreRequisicao(preAprovacao);
-			pre.setIdReferenciaLocal("referencia123");
-			pre.setUrlRedirecionamentoAposConfirmacao("http://www.cachorro.com.br");
+			EnvioPreRequisicao envio = new EnvioPreRequisicao(pre);
+			envio.setIdReferenciaLocal("referencia123");
+			envio.setUrlRedirecionamentoAposConfirmacao("http://www.cachorro.com.br");
 			
-			PagSeguroAPI.instance().config().setEmail(email).setToken(token).setProxyURI("cache.bb.com.br").setProxyPorta(80).setProxyUsuario("c1276009").setProxySenha("34742132").envioAmbienteTestes();
-			RespostaPreAprovacao response = PagSeguroAPI.instance().assinatura().preAprovacao(pre);
+			PagSeguroAPI.instance().config().setEmail(email).setToken(token).setProxyURI("127.0.0.1").setProxyPorta(3128).indicaAmbienteTestes();
+			RespostaPreAprovacao response = PagSeguroAPI.instance().assinatura().preAprovacao(envio);
 			assertNotNull(response);
 			
 		} catch (ErrosRemotosPagSeguroException ex) {

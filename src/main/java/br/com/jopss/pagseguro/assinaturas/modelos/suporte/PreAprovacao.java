@@ -81,6 +81,7 @@ public class PreAprovacao {
 		this.limiteValorAssinatura = fmt.format(limiteValorAssinatura);
 		this.nome = nome;
 		this.valorCobrancaPeriodica= fmt.format(valorMensalidade);
+                this.valorLimiteMensal = fmt.format(valorMensalidade);
 	}
 
 	/**

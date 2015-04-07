@@ -104,7 +104,7 @@ public final class ConfiguracaoAPI {
 	 * 
 	 * @return ConfiguracaoAPI
 	 */
-	public ConfiguracaoAPI envioAmbienteTestes() {
+	public ConfiguracaoAPI indicaAmbienteTestes() {
 		APIConfigSingleton.get().setTeste(true);
 		return this;
 	}
@@ -116,7 +116,7 @@ public final class ConfiguracaoAPI {
 	 * 
 	 * @return ConfiguracaoAPI
 	 */
-	public ConfiguracaoAPI envioAmbienteReal() {
+	public ConfiguracaoAPI indicaAmbienteReal() {
 		APIConfigSingleton.get().setTeste(false);
 		return this;
 	}
