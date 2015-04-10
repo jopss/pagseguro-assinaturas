@@ -86,6 +86,13 @@ public class PreAprovacao {
                 this.valorLimiteMensal = fmt.format(valorMensalidade);
 	}
 
+        public PreAprovacao(String nome, PeriodoPreAprovacao periodo, Double valorMensalidade, Date dataFinalCobranca) {
+		this.periodo = periodo;
+		this.dataFinalCobranca = dataFinalCobranca;
+		this.nome = nome;
+		this.valorCobrancaPeriodica= fmt.format(valorMensalidade);
+	}
+        
 	/**
 	 * Valor máximo que pode ser cobrado por mês de vigência da assinatura, independente de sua periodicidade. 
 	 * <ul>
