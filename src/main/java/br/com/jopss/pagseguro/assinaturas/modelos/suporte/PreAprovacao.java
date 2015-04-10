@@ -86,11 +86,12 @@ public class PreAprovacao {
                 this.valorLimiteMensal = fmt.format(valorMensalidade);
 	}
 
-        public PreAprovacao(String nome, PeriodoPreAprovacao periodo, Double valorMensalidade, Date dataFinalCobranca) {
+        public PreAprovacao(String nome, PeriodoPreAprovacao periodo, Double valorMensalidade, Date dataFinalCobranca, Double limiteValorAssinatura) {
 		this.periodo = periodo;
 		this.dataFinalCobranca = dataFinalCobranca;
 		this.nome = nome;
 		this.valorCobrancaPeriodica= fmt.format(valorMensalidade);
+		this.limiteValorAssinatura = fmt.format(limiteValorAssinatura);
 	}
         
 	/**
