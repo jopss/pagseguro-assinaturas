@@ -79,7 +79,7 @@ public void pagseguroPeriodicCallback(@RequestParam("notificationCode") String n
 	try {
 			//CONFIGURA A API COM O USUARIO, SENHA, E QUAL AMBIENTE (PRODUCAO OU TESTE).
 			//PODE-SE ADICIONAR PROXY CASO PRECISE.
-			PagSeguroAPI.instance().config().setEmail(email).setToken(token);
+			PagSeguroAPI.instance().config().setEmail(email).setToken(token).indicaAmbienteReal();
 			
 			//TENTA PEGAR A NOTIFICACAO
 			RespostaNotificacaoAssinatura resposta = PagSeguroAPI.instance().notificacoes().assinatura(notificationCode);
