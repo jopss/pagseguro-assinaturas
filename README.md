@@ -62,6 +62,7 @@ try {
 	System.out.println("PagSeguroException: "+ ex); //tratar e exibir ao usuario conforme sua app...
 }
 ```
+O endereço do callback deve ser criado na sua aplicação, e como é dinâmico, pode-se passar parâmetros. Ele serve para após a conclusão da operação, o PagSeguro irá redirecionar o cliente para o endereço callback informado, para que você mostre algum tipo de confirmação dentro da sua aplicação.
 
 Exemplo de Retorno de Notificações:
 
