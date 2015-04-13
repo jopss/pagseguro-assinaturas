@@ -55,11 +55,11 @@ try {
 } catch (ErrosRemotosPagSeguroException ex) {
 	if(ex.contemErros()){
 		for(Erro e : ex.getErrosPagSeguro().getErros()){
-			System.out.println(e.getCodigoEMensagem()); //tratar e exibir ao usuario conforme sua app...
+			System.out.println("ErrosRemotosPagSeguroException: "+ e.getCodigoEMensagem()); //tratar e exibir ao usuario conforme sua app...
 		}
 	}
 } catch (PagSeguroException ex) {
-	System.out.println(ex.getMessage()); //tratar e exibir ao usuario conforme sua app...
+	System.out.println("PagSeguroException: "+ ex); //tratar e exibir ao usuario conforme sua app...
 }
 ```
 
@@ -70,7 +70,7 @@ Abaixo segue um trecho de código com SpringMVC para exemplificar o retorno peri
 ```java
 @Transactional
 @RequestMapping(value = "/pagseguro/callback/periodic", method = RequestMethod.POST)
-public void pagseguroPeriodicCallback(@RequestParam("notificationCode") String notificationCode, @RequestParam("notificationType") String notificationType, Model model) {
+public void pagseguroPeriodicCallback(@RequestParam("notificationCode") String notificationCode, @RequestParam("notificationType") String notificationType) {
 
 	//DADOS PARA ASSINATURA
 	String token = "ABC123";
@@ -89,11 +89,11 @@ public void pagseguroPeriodicCallback(@RequestParam("notificationCode") String n
 	} catch (ErrosRemotosPagSeguroException ex) {
 		if(ex.contemErros()){
 			for(Erro e : ex.getErrosPagSeguro().getErros()){
-				System.out.println("ErrosRemotosPagSeguroException: "+ e.getCodigoEMensagem());
+				System.out.println("ErrosRemotosPagSeguroException: "+ e.getCodigoEMensagem()); //tratar e exibir ao usuario conforme sua app...
 			}
 		}
 	} catch (PagSeguroException ex) {
-		System.out.println("PagSeguroException: "+ ex);
+		System.out.println("PagSeguroException: "+ ex); //tratar e exibir ao usuario conforme sua app...
 	} 
 }
 ```
