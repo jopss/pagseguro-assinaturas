@@ -63,6 +63,40 @@ try {
 }
 ```
 
+Exemplo de Retorno de Notificações:
+
+Abaixo segue um trecho de código com SpringMVC para exemplificar o retorno periódico do PagSeguro. A URL do retorno deve ser configurado na sua conta do PagSeguro. Os nomes dos parâmetros de código de notificação e tipo de notificação são padrões. Para mais informações, veja os docs online do PagSeguro.
+
+```java
+@Transactional
+@RequestMapping(value = "/pagseguro/callback/periodic", method = RequestMethod.POST)
+public void pagseguroPeriodicCallback(@RequestParam("notificationCode") String notificationCode, @RequestParam("notificationType") String notificationType, Model model) {
+
+	//DADOS PARA ASSINATURA
+	String token = "ABC123";
+	String email = "email@email.com";
+
+	try {
+			//CONFIGURA A API COM O USUARIO, SENHA, E QUAL AMBIENTE (PRODUCAO OU TESTE).
+			//PODE-SE ADICIONAR PROXY CASO PRECISE.
+			PagSeguroAPI.instance().config().setEmail(email).setToken(token);
+			
+			//TENTA PEGAR A NOTIFICACAO
+			RespostaNotificacaoAssinatura resposta = PagSeguroAPI.instance().notificacoes().assinatura(notificationCode);
+            
+            //faz algo com a resposta....
+			
+	} catch (ErrosRemotosPagSeguroException ex) {
+		if(ex.contemErros()){
+			for(Erro e : ex.getErrosPagSeguro().getErros()){
+				System.out.println("ErrosRemotosPagSeguroException: "+ e.getCodigoEMensagem());
+			}
+		}
+	} catch (PagSeguroException ex) {
+		System.out.println("PagSeguroException: "+ ex);
+	} 
+}
+```
 
 Status
 ------
