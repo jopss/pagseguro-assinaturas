@@ -55,11 +55,11 @@ try {
 } catch (ErrosRemotosPagSeguroException ex) {
 	if(ex.contemErros()){
 		for(Erro e : ex.getErrosPagSeguro().getErros()){
-			System.out.println(e.getCodigoEMensagem());
+			System.out.println(e.getCodigoEMensagem()); //tratar e exibir ao usuario conforme sua app...
 		}
 	}
 } catch (PagSeguroException ex) {
-	System.out.println(ex.getMessage());
+	System.out.println(ex.getMessage()); //tratar e exibir ao usuario conforme sua app...
 }
 ```
 
