@@ -20,7 +20,7 @@ Uso
 
 Para utilizar esta lib na sua aplicação, centralize o uso e o fluxo pela classe "PagSeguroAPI". Com ela pode-se configurar dados, enviar e cancelar assinaturas, e receber notificações.
 
-Exemplo de Envio de Assinaturas:
+**Exemplo de Envio de Assinaturas:**
 
 ```java
 //DADOS PARA ASSINATURA
@@ -64,7 +64,7 @@ try {
 ```
 O endereço do callback deve ser criado na sua aplicação, e como é dinâmico, pode-se passar parâmetros. Ele serve para após a conclusão da operação, o PagSeguro irá redirecionar o cliente para o endereço callback informado, para que você mostre algum tipo de confirmação dentro da sua aplicação.
 
-Exemplo de Retorno de Notificações:
+**Exemplo de Retorno de Notificações:**
 
 Abaixo segue um trecho de código com SpringMVC para exemplificar o retorno periódico do PagSeguro. A URL do retorno deve ser configurado na sua conta do PagSeguro. Os nomes dos parâmetros de código de notificação e tipo de notificação são padrões. Para mais informações, veja os docs online do PagSeguro.
 
