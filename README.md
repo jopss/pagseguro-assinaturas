@@ -50,6 +50,9 @@ try {
 			
 	//ENVIO EFETIVO AO PAGSEGURO
 	RespostaPreAprovacao respostaPreAprovacao = PagSeguroAPI.instance().assinatura().preAprovacao(envio);
+	//--> AQUI VOCE JA TEM O CODIGO DA TRANSACAO DENTRO DA RESPOSTA. PODE-SE TRABALHAR COM ELE...
+	
+	//REDIRECIONA PARA A URL DE PAGAMENTO. COM ISSO O CLIENTE INFORMA SEU LOGIN E PAGA.
 	PagSeguroAPI.instance().assinatura().redirecionarURLPagamento(response, respostaPreAprovacao);
 			
 } catch (ErrosRemotosPagSeguroException ex) {
