@@ -18,9 +18,9 @@ Ainda não há maven externo configurado.
 Uso
 ===
 
-Para utilizar esta lib na sua aplicação, basta configurar a dependência maven no seu projeto, utilizar a classe "PagSeguroAPI" para iniciar o fluxo.
+Para utilizar esta lib na sua aplicação, centralize o uso e o fluxo pela classe "PagSeguroAPI". Com ela pode-se configurar dados, enviar e cancelar assinaturas, e receber notificações.
 
-Exemplo:
+Exemplo de Envio de Assinaturas:
 
 ```java
 //DADOS PARA ASSINATURA
@@ -30,7 +30,7 @@ Double preco = 1.99D;
 Date dataInicial = new Date();
 Date dataFinal = new DateTime().plusYears(1).toDate(); //uso da API JodaTime.
 Double maxVigencia = preco * 12;
-String profileCode = "codigoMuitoSeguro123";
+String codigoInterno = "codigoMuitoSeguro123";
 String token = "ABC123";
 String email = "email@email.com";
 
@@ -39,7 +39,7 @@ PreAprovacao pre = new PreAprovacao(nome, periodo, preco, dataInicial, dataFinal
 pre.setTipo(TipoAssinatura.AUTOMATICO);
                 
 EnvioPreRequisicao envio = new EnvioPreRequisicao(pre);
-envio.setIdReferenciaLocal(profileCode);
+envio.setIdReferenciaLocal(codigoInterno);
 envio.setUrlRedirecionamentoAposConfirmacao("http://minhaapp/pagseguro/callback");
 
 //CONFIGURA A API COM O USUARIO, SENHA, E QUAL AMBIENTE (PRODUCAO OU TESTE).
@@ -67,4 +67,4 @@ try {
 Status
 ------
 
-Em construção... (não há release).
+Em construção e testes... (não há release).
