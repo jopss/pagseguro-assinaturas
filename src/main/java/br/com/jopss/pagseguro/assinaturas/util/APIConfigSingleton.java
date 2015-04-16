@@ -51,27 +51,27 @@ public final class APIConfigSingleton {
 	}
 	
 	public String getDefaultUrlPreAprovacao(){
-		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/request";
+		return "https://ws.pagseguro.uol.com.br/v3/pre-approvals/request";
 	}
 	
 	public String getDefaultUrlPagamento(){
-		return "https://pagseguro.uol.com.br/v2/pre-approvals/request.html";
+		return "https://pagseguro.uol.com.br/v3/pre-approvals/request.html";
 	}
 	
 	public String getDefaultUrlNotificacaoTransacao(){
-		return "https://ws.pagseguro.uol.com.br/v2/transactions/notifications";
+		return "https://ws.pagseguro.uol.com.br/v3/transactions/notifications";
 	}
 	
 	public String getDefaultUrlNotificacaoAssinatura(){
-		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/notifications";
+		return "https://ws.pagseguro.uol.com.br/v3/pre-approvals/notifications";
 	}
 	
 	public String getDefaultUrlCobranca(){
-		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/payment";
+		return "https://ws.pagseguro.uol.com.br/v3/pre-approvals/payment";
 	}
 	
 	public String getDefaultUrlCancelamento(){
-		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/cancel";
+		return "https://ws.pagseguro.uol.com.br/v3/pre-approvals/cancel";
 	}
 	
 	public boolean proxyConfigurado(){

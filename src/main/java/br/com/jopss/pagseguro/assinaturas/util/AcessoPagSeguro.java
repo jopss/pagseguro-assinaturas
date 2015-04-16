@@ -58,7 +58,7 @@ public final class AcessoPagSeguro {
 			conn.setUseCaches(false);
 			
 			if(APIConfigSingleton.get().isTeste()){
-				conn.setRequestProperty("access-control-allow-origin", "https://sandbox.pagseguro.uol.com.br");
+				conn.setRequestProperty("Access-Control-Allow-Origin", "https://sandbox.pagseguro.uol.com.br");
 			}
 
 			OutputStreamWriter writer = null;
