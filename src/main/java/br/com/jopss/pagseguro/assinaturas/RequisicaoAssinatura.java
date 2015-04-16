@@ -76,7 +76,7 @@ public final class RequisicaoAssinatura {
 	 * Método de acesso HTTP GET.
 	 * Efetua o cancelamento de uma assinatura no PagSeguro.
 	 * 
-	 * @param codigoMensalidade String com o número da assinatura a ser cancelada.
+	 * @param codigoMensalidade String com o número da assinatura a ser cancelada (preApprovalCode). Codigo remoto do PagSeguro.
 	 * @return {@link br.com.jopss.pagseguro.assinaturas.modelos.RespostaNotificacaoAssinatura}.
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException

@@ -1,6 +1,7 @@
 package br.com.jopss.pagseguro.assinaturas.modelos;
 
 import br.com.jopss.pagseguro.assinaturas.modelos.interfaces.RespostaPagseguro;
+import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.SituacaoAssinatura;
 import br.com.jopss.pagseguro.assinaturas.util.DateAdapterJaxB;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,10 +33,13 @@ public class RespostaCancelamento implements RespostaPagseguro {
 	 *	<li>Obrigatorio.</li>
 	 * </ul>
 	 * 
-	 * @return String
+	 * @return SituacaoAssinatura
 	 */
-	public String getSituacao() {
-		return situacao;
+	public SituacaoAssinatura getSituacao() {
+                if(situacao == null){
+                        return null;
+                }
+		return SituacaoAssinatura.valueOf(situacao);
 	}
 
 	/**
