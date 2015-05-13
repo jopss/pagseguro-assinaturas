@@ -2,8 +2,11 @@ package br.com.jopss.pagseguro.assinaturas.modelos;
 
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.Cliente;
 import br.com.jopss.pagseguro.assinaturas.modelos.interfaces.EnvioPagseguro;
+import br.com.jopss.pagseguro.assinaturas.modelos.suporte.Item;
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.PreAprovacao;
 import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.TipoAssinatura;
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -15,8 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author João Paulo Sossoloti.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "preApprovalRequest")
-public class EnvioPreRequisicao implements EnvioPagseguro {
+@XmlRootElement(name = "checkout")
+public class EnvioPreRequisicaoCheckout implements EnvioPagseguro {
 	
 	@XmlElement(name = "redirectURL")
 	private String urlRedirecionamentoAposConfirmacao;
@@ -33,10 +36,13 @@ public class EnvioPreRequisicao implements EnvioPagseguro {
 	@XmlElement(name = "preApproval")
 	private PreAprovacao preAprovacao;
 
+	@XmlElement(name = "items")
+	private final Set<Item> itens = new HashSet<>();
+        
 	/**
 	 * Construtor vazio necessario para formatacao automatica.
 	 */
-	public EnvioPreRequisicao() {
+	public EnvioPreRequisicaoCheckout() {
 	}
 	
 	/**
@@ -44,11 +50,43 @@ public class EnvioPreRequisicao implements EnvioPagseguro {
 	 * 
 	 * @param preAprovacao PreAprovacao com os dados da assinatura.
 	 */
-	public EnvioPreRequisicao(PreAprovacao preAprovacao) {
-                preAprovacao.setTipo(TipoAssinatura.AUTOMATICO);
+	public EnvioPreRequisicaoCheckout(PreAprovacao preAprovacao) {
+                preAprovacao.setTipo(TipoAssinatura.MANUAL);
 		this.preAprovacao = preAprovacao;
 	}
+        
+        /**
+         * Adiciona um item de valor para ser pago no momento da assinatura.
+         * 
+         * @param id Integer
+         * @param descricao String
+         * @param valor Double
+         * @param quantidade Integer
+         * @param peso Integer
+         */
+        public void addItem(Integer id, String descricao, Double valor, Integer quantidade, Integer peso){
+                Item i = new Item();
+                i.setDescricao(descricao);
+                i.setId(id);
+                i.setPeso(peso);
+                i.setQuantidade(quantidade);
+                i.setValor(valor);
+                itens.add(i);
+        }
 
+        /**
+         * Adiciona um item de valor para ser pago no momento da assinatura.
+         * 
+         * @param descricao String
+         * @param valor Double
+         */
+        public void addItem(String descricao, Double valor){
+                Item i = new Item();
+                i.setDescricao(descricao);
+                i.setValor(valor);
+                itens.add(i);
+        }
+        
 	/**
 	 * URL para onde o comprador será redirecionado após a finalização do fluxo de assinatura. 
 	 * <ul>

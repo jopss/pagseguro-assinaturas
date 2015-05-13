@@ -1,6 +1,7 @@
 package br.com.jopss.pagseguro.assinaturas.modelos;
 
 import br.com.jopss.pagseguro.assinaturas.modelos.interfaces.EnvioPagseguro;
+import br.com.jopss.pagseguro.assinaturas.modelos.suporte.Item;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -24,7 +25,7 @@ public class EnvioCobranca implements EnvioPagseguro {
 	private String idReferenciaLocal;
 	
 	@XmlElement(name = "items")
-	private final Set<EnvioCobranca.Item> itens = new HashSet<>();
+	private final Set<Item> itens = new HashSet<>();
 	
 	/**
 	 * Construtor vazio necessario para formatacao automatica.
@@ -44,32 +45,10 @@ public class EnvioCobranca implements EnvioPagseguro {
 		
 		//o identificador e a quantidade esta fixa, pois para uma única mensalidade, não muda.
 		Item itemUnico = new Item();
-		itemUnico.id = 1;
-		itemUnico.quantidade = 1;
-		itemUnico.descricao = descricao;
-		itemUnico.valor = valor;
-	}
-	
-	/**
-	 * Classe interna de suporte ao item da mensalidade.
-	 * O WS do PagSeguro requer uma lista de itens a serem cobrados, mas
-	 * como é sobre uma assinatura, sempre teremos um único item.
-	 */
-	@XmlAccessorType(XmlAccessType.FIELD)
-	@XmlRootElement(name = "item")
-	public class Item{
-		
-		@XmlElement(name = "id")
-		protected Integer id;
-		
-		@XmlElement(name = "description")
-		protected String descricao;
-		
-		@XmlElement(name = "amount")
-		protected Double valor;
-		
-		@XmlElement(name = "quantity")
-		protected Integer quantidade;
+		itemUnico.setId(1);
+		itemUnico.setQuantidade(1);
+		itemUnico.setDescricao(descricao);
+		itemUnico.setValor(valor);
 	}
 
 	/**

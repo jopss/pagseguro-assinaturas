@@ -12,11 +12,10 @@ import br.com.jopss.pagseguro.assinaturas.modelos.suporte.enums.PeriodoPreAprova
 import java.util.Date;
 import org.joda.time.DateTime;
 import static org.junit.Assert.*;
-import org.junit.Test;
 
 public class TestePreAutorizacao {
 
-	private String email = "jopss@ideebox.com.br";
+	private String email = "jopss@supralegal.com.br";
 	private String token = "FCB44BE80B7A4E178EC5D55BC6D7DC91";
 	
 	//@Test

@@ -50,6 +50,10 @@ public final class APIConfigSingleton {
 		teste = false;
 	}
 	
+        public String getDefaultUrlPreCheckout(){
+		return "https://ws.pagseguro.uol.com.br/v2/checkout";
+	}
+        
 	public String getDefaultUrlPreAprovacao(){
 		return "https://ws.pagseguro.uol.com.br/v2/pre-approvals/request";
 	}
@@ -168,7 +172,28 @@ public final class APIConfigSingleton {
 		}
 		return urlPreAprovacao;
 	}
-
+        
+	/**
+	 * Retorna a URL que será utilizado internamente pela API no acesso a pré autorização da assinatura com checkou de uma valor inicial.
+	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://ws.pagseguro.uol.com.br/v2/checkout".
+	 * 
+	 * @return String.
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
+	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
+	 */
+	public String getUrlPreCheckout() throws ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		String urlPreCheckout = this.getDefaultUrlPreCheckout();
+		if (StringUtils.isBlank(urlPreCheckout)) {
+			throw new ConfiguracaoInvalidaException("Configuração: urlPreAprovacao obrigatório.");
+		}
+		urlPreCheckout = urlPreCheckout + "?email="+APIConfigSingleton.get().getEmail();
+		urlPreCheckout = urlPreCheckout + "&token="+APIConfigSingleton.get().getToken();
+		if(APIConfigSingleton.get().isTeste()){
+			urlPreCheckout = urlPreCheckout.replaceAll("ws.pagseguro", "ws.sandbox.pagseguro");
+		}
+		return urlPreCheckout;
+	}
+        
 	/**
 	 * Retorna a URL que será utilizado para redicionamento ao pagamento PagSeguro.
 	 * Caso o valor esteja inválido, lança exceção. Já existe um valor padrão: "https://pagseguro.uol.com.br/v2/pre-approvals/request.html".
