@@ -37,31 +37,20 @@ public class EnvioCobranca implements EnvioPagseguro {
 	 * Construtor que recebe como dependencia os dados da cobrança.
 	 * 
 	 * @param codigoAssinatura String. Código da assinatura, concedida previamente, que identifica a cobrança sendo realizada. Texto de 32 caracteres.
+	 * @param idReferenciaLocal String.
 	 * @param descricao String. Descreve o item a ser cobrado. Texto de 100 caracteres.
 	 * @param valor Double. Representa o preço a cobrado.
 	 */
-	public EnvioCobranca(String codigoAssinatura, String descricao, Double valor) {
+	public EnvioCobranca(String codigoAssinatura, String idReferenciaLocal, String descricao, Double valor) {
 		this.codigoAssinatura=codigoAssinatura;
-		
+		this.idReferenciaLocal=idReferenciaLocal;
+                
 		//o identificador e a quantidade esta fixa, pois para uma única mensalidade, não muda.
 		Item itemUnico = new Item();
 		itemUnico.setId(1);
 		itemUnico.setQuantidade(1);
 		itemUnico.setDescricao(descricao);
 		itemUnico.setValor(valor);
-	}
-
-	/**
-	 * Código/Identificador para fazer referência à transação em seu sistema.
-	 * <ul>
-	 *	<li>Formato: Texto de 200 caracteres.</li>
-	 *	<li>Opcional.</li>
-	 * </ul>
-	 * 
-	 * @param idReferenciaLocal String
-	 */
-	public void setIdReferenciaLocal(String idReferenciaLocal) {
-		this.idReferenciaLocal = idReferenciaLocal;
 	}
 	
 }
