@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -21,6 +22,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "checkout")
 public class EnvioPreRequisicaoCheckout implements EnvioPagseguro {
 	
+	@XmlElement(name = "currency")
+	private String moeda = "BRL";
+        
 	@XmlElement(name = "redirectURL")
 	private String urlRedirecionamentoAposConfirmacao;
 	
@@ -36,7 +40,8 @@ public class EnvioPreRequisicaoCheckout implements EnvioPagseguro {
 	@XmlElement(name = "preApproval")
 	private PreAprovacao preAprovacao;
 
-	@XmlElement(name = "items")
+        @XmlElementWrapper(name="items")
+	@XmlElement(name = "item")
 	private final Set<Item> itens = new HashSet<>();
         
 	/**

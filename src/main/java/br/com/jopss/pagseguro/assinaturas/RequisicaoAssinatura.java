@@ -10,6 +10,7 @@ import br.com.jopss.pagseguro.assinaturas.modelos.EnvioPreRequisicaoCheckout;
 import br.com.jopss.pagseguro.assinaturas.modelos.RespostaCancelamento;
 import br.com.jopss.pagseguro.assinaturas.modelos.RespostaCobranca;
 import br.com.jopss.pagseguro.assinaturas.modelos.RespostaPreAprovacao;
+import br.com.jopss.pagseguro.assinaturas.modelos.RespostaPreAprovacaoCheckout;
 import br.com.jopss.pagseguro.assinaturas.util.APIConfigSingleton;
 import br.com.jopss.pagseguro.assinaturas.util.AcessoPagSeguro;
 import java.io.IOException;
@@ -52,14 +53,14 @@ public final class RequisicaoAssinatura {
 	 * Com o código retornado em mãos, podemos efetivar a autorização redirecionando para a página de pagamento.
 	 * 
 	 * @param preRequisicao EnvioPreRequisicaoCheckout com os dados da assinatura e do cliente.
-	 * @return {@link br.com.jopss.pagseguro.assinaturas.modelos.RespostaPreAprovacao} resposta com código do cliente e data, para iniciar fluxo de pagamento.
+	 * @return {@link br.com.jopss.pagseguro.assinaturas.modelos.RespostaPreAprovacaoCheckout} resposta com código do cliente e data, para iniciar fluxo de pagamento.
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ProblemaGenericoAPIException
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ErrosRemotosPagSeguroException
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.ConfiguracaoInvalidaException
 	 * @throws br.com.jopss.pagseguro.assinaturas.exception.AutorizacaoInvalidaException
 	 */
-	public RespostaPreAprovacao preAprovacaoComCheckout(EnvioPreRequisicaoCheckout preRequisicao) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException, ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
-		return new AcessoPagSeguro().acessoPOST( APIConfigSingleton.get().getUrlPreAprovacao(), RespostaPreAprovacao.class, preRequisicao );
+	public RespostaPreAprovacaoCheckout preAprovacaoComCheckout(EnvioPreRequisicaoCheckout preRequisicao) throws ProblemaGenericoAPIException, ErrosRemotosPagSeguroException, ConfiguracaoInvalidaException, AutorizacaoInvalidaException {
+		return new AcessoPagSeguro().acessoPOST( APIConfigSingleton.get().getUrlPreCheckout(), RespostaPreAprovacaoCheckout.class, preRequisicao );
 	}
         
 	/**
@@ -72,6 +73,24 @@ public final class RequisicaoAssinatura {
 	 * @throws ProblemaGenericoAPIException 
 	 */
 	public void redirecionarURLPagamento(HttpServletResponse response, RespostaPreAprovacao respostaPreRequisicao) throws ConfiguracaoInvalidaException, ProblemaGenericoAPIException{
+		try {
+			String urlWithSessionID = response.encodeRedirectURL(APIConfigSingleton.get().getUrlPagamento(respostaPreRequisicao.getCodigo()));
+			response.sendRedirect( urlWithSessionID );
+		} catch (IOException ex) {
+			throw new ProblemaGenericoAPIException(ex);
+		}
+	}
+        
+        /**
+	 * Redireciona a requisição para o página de pagamento do PagSeguro, onde o usuário irá autenticar e autorizar a assinatura.
+	 * A página de resposta após sucesso depende da configuração que foi utilizada na 'preAutorizacao'.
+	 * 
+	 * @param response HttpServletResponse do fluxo web para redirecionar ao PagSeguro.
+	 * @param respostaPreRequisicao RespostaPreAprovacaoCheckout com os dados da pré aprocação gerado anteriormente.
+	 * @throws ConfiguracaoInvalidaException
+	 * @throws ProblemaGenericoAPIException 
+	 */
+	public void redirecionarURLPagamento(HttpServletResponse response, RespostaPreAprovacaoCheckout respostaPreRequisicao) throws ConfiguracaoInvalidaException, ProblemaGenericoAPIException{
 		try {
 			String urlWithSessionID = response.encodeRedirectURL(APIConfigSingleton.get().getUrlPagamento(respostaPreRequisicao.getCodigo()));
 			response.sendRedirect( urlWithSessionID );
